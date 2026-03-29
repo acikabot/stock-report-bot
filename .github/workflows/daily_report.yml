@@ -3,7 +3,7 @@ name: 📈 Daily Stock Morning Report
 on:
   schedule:
     # Runs at 7:00 AM EST (12:00 UTC) every weekday Mon–Fri
-    - cron: "0 12 * * 1-5"
+    - cron: "0 6 * * 1-5"
   workflow_dispatch:  # allows manual trigger from GitHub UI anytime
 
 jobs:
