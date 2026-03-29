@@ -102,6 +102,7 @@ These are stocks to remove buy limit orders from immediately.
 Any upcoming events in the next 7 days that could cause big moves —
 earnings dates, Fed meetings, product launches, economic data releases.
 These are dates to be aware of before entering a swing position.
+Include the dates and times of the events in the report.
 
 6. 🧠 WEEKEND WATCHLIST PREP
 Top 3 stocks worth doing deep chart analysis on this weekend.
