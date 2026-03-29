@@ -65,38 +65,50 @@ def analyze_with_groq(watchlist_news: dict) -> str:
 
     today = datetime.now().strftime("%A, %B %d %Y")
 
-    prompt = f"""You are a professional stock market analyst AI.
+    prompt = f"""You are a professional swing and position trading analyst AI.
 Today is {today}.
 
-Below is the latest news for a watchlist of stocks split into two groups:
-- AI & Tech stocks: NVDA, MSFT, GOOGL, META, AMZN, AMD, TSM, PLTR, TSLA, INTC, ANET
-- Geopolitical/Iran-war sensitive stocks: XOM, CVX, LMT, RTX, NOC, GD, USO
+My trading style:
+- I am a swing/position trader, holding trades for days to weeks
+- I identify demand zones on charts and set buy limit orders there
+- I do NOT day trade or scalp
+- I want to know if my longer term thesis on a stock is still valid
+- I want to know which stocks are setting up for a big move this week
 
-Write a MORNING REPORT with these exact sections:
+Analyze the news below and write a MORNING REPORT with these exact sections:
 
-1. 🌍 MACRO OVERVIEW
-Big picture themes today — geopolitical, Fed, oil, macro.
+1. 📅 WEEKLY BIAS
+Overall market direction bias for the coming days — bullish, bearish, or ranging.
+Are conditions good for swing entries or should I wait?
 
-2. 🤖 AI & TECH SUMMARY
-Rolled up view of what's moving in AI/tech and why.
+2. 🔥 VOLATILITY WATCHLIST
+List the top 5 stocks from my watchlist most likely to make a significant 
+move in the next 2-5 days and WHY. Include what's driving the expected move.
 
-3. ⚔️ GEOPOLITICAL WATCH
-Iran/Middle East impact on oil and defense stocks specifically.
-
-4. 📊 STOCK-BY-STOCK BREAKDOWN
-For each ticker that has news:
-- Ticker name
+3. 📊 STOCK-BY-STOCK BREAKDOWN
+For each ticker with news:
 - Sentiment: 🟢 Bullish / 🔴 Bearish / 🟡 Neutral
-- One line summary
-- One "WATCH:" note if there's a catalyst
+- One line summary of what's happening
+- SWING SETUP: Is this stock approaching a potential demand zone? 
+  Is the trend intact? Any reason to avoid or watch closely?
+- THESIS CHECK: Does today's news support or threaten a long position?
 
-5. ⚡ TOP 3 THINGS TO WATCH TODAY
-The 3 most important catalysts for today.
+4. ⚠️ DEMAND ZONE THREATS
+Any news that could cause a stock to BREAK BELOW a demand zone violently —
+earnings surprises, macro shocks, sector bad news, geopolitical escalation.
+These are stocks to remove buy limit orders from immediately.
 
-6. ⚠️ RISK FLAGS
-Anything that could hurt positions today.
+5. 📰 CATALYST CALENDAR
+Any upcoming events in the next 7 days that could cause big moves —
+earnings dates, Fed meetings, product launches, economic data releases.
+These are dates to be aware of before entering a swing position.
 
-Be concise, direct, and actionable. Use bullet points. No fluff. No disclaimers.
+6. 🧠 WEEKEND WATCHLIST PREP
+Top 3 stocks worth doing deep chart analysis on this weekend.
+For each: why it's interesting, what price area to watch, what the setup could be.
+
+Be direct and actionable. Write for a swing trader, not a day trader.
+No intraday noise. Focus on multi-day and multi-week moves only.
 
 ---
 NEWS DATA:
