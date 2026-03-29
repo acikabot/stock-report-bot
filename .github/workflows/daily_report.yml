@@ -24,7 +24,7 @@ jobs:
 
       - name: 📈 Run stock report
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY:   ${{ secrets.GROQ_API_KEY }}
           EMAIL_SENDER:   ${{ secrets.EMAIL_SENDER }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
