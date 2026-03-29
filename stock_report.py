@@ -65,51 +65,78 @@ def analyze_with_groq(watchlist_news: dict) -> str:
 
     today = datetime.now().strftime("%A, %B %d %Y")
 
-    prompt = f"""You are a professional swing and position trading analyst AI.
+    prompt = f"""You are a professional trading analyst AI covering two different trading styles.
 Today is {today}.
 
-My trading style:
-- I am a swing/position trader, holding trades for days to weeks
-- I identify demand zones on charts and set buy limit orders there
-- I do NOT day trade or scalp
-- I want to know if my longer term thesis on a stock is still valid
-- I want to know which stocks are setting up for a big move this week
+Analyze the news below and write a report in TWO clearly separated parts:
 
-Analyze the news below and write a MORNING REPORT with these exact sections:
+════════════════════════════════════════
+PART 1 — SWING TRADER REPORT
+════════════════════════════════════════
+Trading style: holds positions days to weeks, identifies demand zones,
+sets buy limit orders, does NOT day trade or scalp.
 
 1. 📅 WEEKLY BIAS
-Overall market direction bias for the coming days — bullish, bearish, or ranging.
+Overall market direction for the coming days — bullish, bearish, or ranging.
 Are conditions good for swing entries or should I wait?
 
-2. 🔥 VOLATILITY WATCHLIST
-List the top 5 stocks from my watchlist most likely to make a significant 
-move in the next 2-5 days and WHY. Include what's driving the expected move.
+2. 🔥 TOP 5 SWING SETUPS THIS WEEK
+Top 5 stocks most likely to make a significant move in the next 2-5 days.
+For each: what's driving the move and what price area to watch.
 
-3. 📊 STOCK-BY-STOCK BREAKDOWN
+3. 📊 SWING BREAKDOWN — STOCK BY STOCK
 For each ticker with news:
 - Sentiment: 🟢 Bullish / 🔴 Bearish / 🟡 Neutral
-- One line summary of what's happening
-- SWING SETUP: Is this stock approaching a potential demand zone? 
-  Is the trend intact? Any reason to avoid or watch closely?
-- THESIS CHECK: Does today's news support or threaten a long position?
+- One line news summary
+- SWING SETUP: Is trend intact? Approaching demand zone?
+- THESIS CHECK: Does news support or threaten a long position?
 
 4. ⚠️ DEMAND ZONE THREATS
-Any news that could cause a stock to BREAK BELOW a demand zone violently —
-earnings surprises, macro shocks, sector bad news, geopolitical escalation.
-These are stocks to remove buy limit orders from immediately.
+Stocks at risk of breaking below demand zones violently.
+Remove buy limit orders on these immediately.
 
-5. 📰 CATALYST CALENDAR
-Any upcoming events in the next 7 days that could cause big moves —
-earnings dates, Fed meetings, product launches, economic data releases.
-These are dates to be aware of before entering a swing position.
-Include the dates and times of the events in the report.
+5. 📰 CATALYST CALENDAR — NEXT 7 DAYS
+Upcoming earnings, Fed events, product launches, economic data.
+Know these before entering any swing position.
 
 6. 🧠 WEEKEND WATCHLIST PREP
-Top 3 stocks worth doing deep chart analysis on this weekend.
-For each: why it's interesting, what price area to watch, what the setup could be.
+Top 3 stocks worth deep chart analysis this weekend.
+For each: why interesting, what price area to watch, what setup could form.
 
-Be direct and actionable. Write for a swing trader, not a day trader.
-No intraday noise. Focus on multi-day and multi-week moves only.
+════════════════════════════════════════
+PART 2 — SCALPER / DAY TRADER REPORT
+════════════════════════════════════════
+Trading style: enters and exits same day, wants volatility,
+wants to know which stocks are moving TODAY and why,
+looks for momentum, news catalysts, and volume spikes.
+
+1. ⚡ TODAY'S TOP 5 VOLATILE STOCKS
+The 5 stocks most likely to make big intraday moves TODAY.
+For each: expected move size, what's driving it, direction bias.
+
+2. 🎯 SCALP SETUPS
+For each high volatility stock:
+- Direction bias: Long or Short
+- What to watch for as entry trigger
+- Key intraday levels to be aware of
+- Risk: what would invalidate this setup
+
+3. 📰 NEWS CATALYSTS TODAY
+Any specific news breaking TODAY that could cause sudden spikes —
+earnings releases, economic data drops, Fed speakers, geopolitical events.
+Include exact times if known.
+
+4. 🔴 STOCKS TO AVOID TODAY
+Stocks that look dangerous for scalping — low volume, unpredictable news,
+wide spreads, earnings tonight (gap risk). Stay away from these.
+
+5. ⏰ KEY TIMES TODAY
+Important scheduled events with exact times EST that could move markets —
+economic data releases, Fed speakers, earnings calls, option expiries.
+
+Be direct and actionable. Part 1 is for multi-day thinking. 
+Part 2 is for today only — intraday, fast, ruthless.
+No fluff. No disclaimers.
 
 ---
 NEWS DATA:
