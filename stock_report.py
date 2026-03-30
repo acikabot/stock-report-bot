@@ -10,10 +10,8 @@ from email.mime.multipart import MIMEMultipart
 # CONFIG
 # ─────────────────────────────────────────
 WATCHLIST = [
-    # AI & Tech
-    "NVDA", "MSFT", "GOOGL", "META", "AMZN", "AMD", "TSM", "PLTR", "TSLA", "INTC", "ANET",
-    # Geopolitical / Iran-war sensitive
-    "XOM", "CVX", "LMT", "RTX", "NOC", "GD", "USO",
+   
+    "NVDA", "MSFT", "GOOGL", "AMZN", "AMD", "PLTR", "TSLA", "LMT", "CSCO", "HIMS", "AAPL",
 ]
 
 GROQ_API_KEY       = os.environ.get("GROQ_API_KEY")
