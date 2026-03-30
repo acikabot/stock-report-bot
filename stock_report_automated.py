@@ -31,13 +31,11 @@ COL_FOCUS       = 5
 # GOOGLE SHEETS — Read subscribers
 # ─────────────────────────────────────────
 def get_subscribers() -> list:
-    """Read all rows from the Google Sheet and return subscriber list."""
     try:
         import google.auth
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
 
-        # Write credentials to temp file
         creds_dict = json.loads(GOOGLE_CREDENTIALS)
         with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
             json.dump(creds_dict, f)
@@ -52,14 +50,13 @@ def get_subscribers() -> list:
         sheet   = service.spreadsheets()
         result  = sheet.values().get(
             spreadsheetId=SPREADSHEET_ID,
-            range="Form_Responses!A2:F1000"  # Skip header row
+            range="Form_Responses!A2:F1000"
         ).execute()
 
         rows = result.get("values", [])
         subscribers = []
 
         for row in rows:
-            # Pad row to 6 columns in case some fields are empty
             while len(row) < 6:
                 row.append("")
 
@@ -70,9 +67,8 @@ def get_subscribers() -> list:
             focus   = row[COL_FOCUS].strip()
 
             if not email or not tickers:
-                continue  # Skip incomplete rows
+                continue
 
-            # Parse tickers into clean list
             ticker_list = [t.strip().upper() for t in tickers.replace(",", " ").split() if t.strip()]
 
             subscribers.append({
@@ -164,12 +160,12 @@ def fetch_finnhub_earnings(ticker: str) -> str:
     if not FINNHUB_API_KEY:
         return ""
     try:
-        today      = datetime.now().strftime("%Y-%m-%d")
-        two_weeks  = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
-        url        = f"https://finnhub.io/api/v1/calendar/earnings?from={today}&to={two_weeks}&symbol={ticker}&token={FINNHUB_API_KEY}"
-        resp       = requests.get(url, timeout=10)
+        today     = datetime.now().strftime("%Y-%m-%d")
+        two_weeks = (datetime.now() + timedelta(days=14)).strftime("%Y-%m-%d")
+        url       = f"https://finnhub.io/api/v1/calendar/earnings?from={today}&to={two_weeks}&symbol={ticker}&token={FINNHUB_API_KEY}"
+        resp      = requests.get(url, timeout=10)
         resp.raise_for_status()
-        earnings   = resp.json().get("earningsCalendar", [])
+        earnings  = resp.json().get("earningsCalendar", [])
         if earnings:
             e      = earnings[0]
             date   = e.get("date", "")
@@ -204,72 +200,72 @@ def fetch_all_data(ticker: str) -> str:
 
 
 # ─────────────────────────────────────────
-# GROQ ANALYSIS — personalized per user
+# BUILD PROMPT BASED ON TRADING STYLE
 # ─────────────────────────────────────────
-def analyze_with_groq(all_data: str, subscriber: dict) -> str:
-    if not GROQ_API_KEY:
-        raise ValueError("GROQ_API_KEY not set.")
+def build_prompt(all_data: str, subscriber: dict) -> str:
+    today   = datetime.now().strftime("%A, %B %d %Y")
+    name    = subscriber["name"]
+    style   = subscriber["style"].lower()
+    focus   = subscriber["focus"]
+    tickers = ", ".join(subscriber["tickers"])
 
-    today    = datetime.now().strftime("%A, %B %d %Y")
-    name     = subscriber["name"]
-    style    = subscriber["style"]
-    focus    = subscriber["focus"]
-    tickers  = ", ".join(subscriber["tickers"])
+    focus_note = f"\nAdditional focus: {focus}" if focus else ""
 
-    focus_note = f"\nAdditional focus requested by this trader: {focus}" if focus else ""
-
-    prompt = f"""You are a professional trading analyst AI writing a personalized morning report.
-Today is {today}.
-This report is for {name}, a {style} trader watching: {tickers}.{focus_note}
-
+    format_rules = """
 FORMAT RULES — follow these strictly:
 - Do NOT use ** for bold, do NOT use ## for headers
 - Use ALL CAPS for section headers
 - Use ► for bullet points
 - Use === as dividers between sections
 - Use emoji as visual anchors at the start of each section
+- Be direct, specific, and actionable
+- No generic statements, no fluff, no disclaimers
+"""
 
-Analyze the data below and write a personalized report in TWO parts:
-
+    swing_part = """
 ===================================================
-PART 1 — SWING TRADER REPORT
+SWING TRADER REPORT
 ===================================================
 
 📅 WEEKLY BIAS
-Overall market direction for coming days.
-Good conditions for swing entries or wait?
+Overall market direction for the coming days.
+Are conditions good for swing entries or should they wait?
 
 🔥 TOP SWING SETUPS THIS WEEK
-Top 3 stocks from their watchlist most likely
-to make a significant move in 2-5 days.
-What's driving it, what price area to watch.
+Top 3 stocks from their watchlist most likely to make
+a significant move in 2-5 days. What is driving it
+and what price area to watch.
 
 📊 SWING BREAKDOWN — STOCK BY STOCK
 For each ticker:
 ► Sentiment: Bullish / Bearish / Neutral
 ► One line news summary
 ► SWING SETUP: Trend intact? Demand zone nearby?
-► INSIDER SIGNAL: Any notable activity?
-► THESIS CHECK: Support or threaten a long?
+► INSIDER SIGNAL: Any notable buying or selling?
+► THESIS CHECK: Does data support or threaten a long?
 
 ⚠️ DEMAND ZONE THREATS
 Stocks at risk of breaking down violently.
 Remove buy limit orders on these immediately.
 
 📰 CATALYST CALENDAR — NEXT 7 DAYS
-Upcoming earnings, Fed events, key dates.
+Upcoming earnings with EPS estimates, Fed events,
+key product launches or economic data releases.
 Know these before entering any swing position.
 
 🧠 WEEKEND WATCHLIST PREP
 Top 2 stocks worth deep chart analysis this weekend.
+Why interesting and what price area to watch.
+"""
 
+    scalp_part = """
 ===================================================
-PART 2 — SCALPER / DAY TRADER REPORT
+SCALPER / DAY TRADER REPORT
 ===================================================
 
 ⚡ TODAY'S TOP VOLATILE STOCKS
 Top 3 most likely to make big intraday moves today.
-Expected move size, driver, direction bias.
+Expected move size, what is driving it, direction bias.
 
 🎯 SCALP SETUPS
 For each volatile stock:
@@ -287,14 +283,47 @@ Dangerous for scalping today and why.
 
 ⏰ KEY TIMES TODAY EST
 Scheduled events that could move markets today.
+"""
 
-Be direct. Be specific. Write for this trader personally.
-No generic statements. No fluff. No disclaimers.
+    # Determine which parts to include based on trading style
+    is_swing = "swing" in style
+    is_day   = "day" in style or "scalp" in style
+    is_both  = is_swing and is_day
+
+    if is_both:
+        report_parts = swing_part + "\n" + scalp_part
+        style_desc   = "swing trader and day trader"
+    elif is_day:
+        report_parts = scalp_part
+        style_desc   = "day trader / scalper"
+    else:
+        # Default to swing trader only
+        report_parts = swing_part
+        style_desc   = "swing trader"
+
+    prompt = f"""You are a professional trading analyst AI writing a personalized morning report.
+Today is {today}.
+This report is for {name}, a {style_desc} watching: {tickers}.{focus_note}
+
+{format_rules}
+
+{report_parts}
 
 ---
 MARKET DATA:
 {all_data}
 """
+    return prompt
+
+
+# ─────────────────────────────────────────
+# GROQ ANALYSIS
+# ─────────────────────────────────────────
+def analyze_with_groq(all_data: str, subscriber: dict) -> str:
+    if not GROQ_API_KEY:
+        raise ValueError("GROQ_API_KEY not set.")
+
+    prompt = build_prompt(all_data, subscriber)
 
     headers = {
         "Authorization": f"Bearer {GROQ_API_KEY}",
@@ -339,7 +368,7 @@ def send_email(report: str, subscriber: dict):
         📈 Morning Stock Report — {today}
     </h2>
     <p style="color:#888;font-size:13px;margin-bottom:20px;">
-        Hey {name} — here's your personalized report for: {tickers}
+        Hey {name} — here is your personalized report for: {tickers}
     </p>
     <pre style="white-space:pre-wrap;font-size:13.5px;line-height:1.75;">{report}</pre>
     <p style="color:#555;font-size:12px;margin-top:32px;">
@@ -373,25 +402,22 @@ def main():
 
     for subscriber in subscribers:
         name    = subscriber["name"]
+        style   = subscriber["style"]
         tickers = subscriber["tickers"]
-        print(f"─── {name} | {', '.join(tickers)} ───")
+        print(f"─── {name} | {style} | {', '.join(tickers)} ───")
 
-        # Fetch data for their specific watchlist
         all_data = ""
         for ticker in tickers:
             print(f"  → {ticker}")
             all_data += fetch_all_data(ticker)
             time.sleep(0.4)
 
-        # Generate personalized report
         print(f"  🤖 Analyzing with Groq...")
         report = analyze_with_groq(all_data, subscriber)
 
-        # Send email
         print(f"  📧 Sending to {subscriber['email']}...")
         send_email(report, subscriber)
 
-        # Small delay between subscribers to avoid rate limits
         time.sleep(2)
 
     print(f"\n✅ All {len(subscribers)} reports sent successfully!")
