@@ -15,7 +15,7 @@ GROQ_API_KEY       = os.environ.get("GROQ_API_KEY")
 FINNHUB_API_KEY    = os.environ.get("FINNHUB_API_KEY")
 EMAIL_SENDER       = os.environ.get("EMAIL_SENDER")
 EMAIL_PASSWORD     = os.environ.get("EMAIL_PASSWORD")
-EMAIL_RECEIVER     = ["arotondi@airamcapital.com", "aistockreports@gmail.com"]
+EMAIL_RECEIVER     = "arotondi@airamcapital.com"
 
 
 # ─────────────────────────────────────────
