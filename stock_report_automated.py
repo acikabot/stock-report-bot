@@ -24,6 +24,15 @@ COL_TICKERS = 3
 COL_STYLE   = 4
 COL_FOCUS   = 5
 
+TEST_MODE = True  # Set to False for production
+
+TEST_SUBSCRIBERS = [
+    {
+        "name":    "test-acika",
+        "email":   "alexdzam4@gmail.com",
+        "tickers": ["NVDA", "TSLA", "PLTR", "HIMS"],
+    }
+]
 
 # ─────────────────────────────────────────
 # GOOGLE SHEETS
@@ -490,6 +499,10 @@ def send_email(report, subscriber):
 # MAIN
 # ─────────────────────────────────────────
 def main():
+   if TEST_MODE:
+    print("🧪 TEST MODE — using hardcoded subscribers")
+    subscribers = TEST_SUBSCRIBERS
+else:
     print("📋 Reading subscribers from Google Sheet...")
     subscribers = get_subscribers()
 
