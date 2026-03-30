@@ -7,8 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 WATCHLIST = [
-    "NVDA", "MSFT", "GOOGL", "META", "AMZN", "AMD", "TSM", "PLTR", "TSLA", "INTC", "ANET",
-    "XOM", "CVX", "LMT", "RTX", "NOC", "GD", "USO",
+    "NVDA", "MSFT", "GOOGL", "AMD", "PLTR", "TSLA", "LMT", "CSCO", "AAPL", "HIMS",
 ]
 
 GROQ_API_KEY    = os.environ.get("GROQ_API_KEY")
