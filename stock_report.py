@@ -148,7 +148,6 @@ FORMAT RULES — follow these strictly:
 - Use ► for bullet points
 - Use === as dividers between sections
 - Use PART 1 and PART 2 as clear separators
-- Keep lines under 65 characters so they wrap cleanly in email
 - Use emoji as visual anchors at the start of each section
 
 """
