@@ -24,7 +24,7 @@ COL_TICKERS = 3
 COL_STYLE   = 4
 COL_FOCUS   = 5
 
-TEST_MODE = False  # Set to True to bypass Google Sheet for testing
+TEST_MODE = True  # Set to True to bypass Google Sheet for testing
 
 TEST_SUBSCRIBERS = [
     {
