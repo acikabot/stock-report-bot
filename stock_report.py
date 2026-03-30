@@ -9,12 +9,7 @@ from email.mime.multipart import MIMEMultipart
 # ─────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────
-WATCHLIST = [
-    # AI & Tech
-    "NVDA", "MSFT", "GOOGL", "META", "AMZN", "AMD", "TSM", "PLTR", "TSLA", "INTC", "ANET",
-    # Geopolitical / Iran-war sensitive
-    "XOM", "CVX", "LMT", "RTX", "NOC", "GD", "USO",
-]
+WATCHLIST = ["TQQQ"]
 
 GROQ_API_KEY       = os.environ.get("GROQ_API_KEY")
 FINNHUB_API_KEY    = os.environ.get("FINNHUB_API_KEY")
@@ -157,77 +152,15 @@ You have access to rich data per stock including:
 - Upcoming earnings dates and EPS estimates
 - Insider buying and selling activity
 
-Analyze all the data below and write a report in TWO clearly separated parts:
-
-════════════════════════════════════════
-PART 1 — SWING TRADER REPORT
-════════════════════════════════════════
-Trading style: holds positions days to weeks, identifies demand zones,
-sets buy limit orders, does NOT day trade or scalp.
-
-1. 📅 WEEKLY BIAS
-Overall market direction for the coming days — bullish, bearish, or ranging.
-Are conditions good for swing entries or should I wait?
-
-2. 🔥 TOP 5 SWING SETUPS THIS WEEK
-Top 5 stocks most likely to make a significant move in the next 2-5 days.
-For each: what's driving the move, what price area to watch, insider activity if any.
-
-3. 📊 SWING BREAKDOWN — STOCK BY STOCK
-For each ticker with meaningful data:
-- Sentiment: 🟢 Bullish / 🔴 Bearish / 🟡 Neutral
-- One line news summary
-- SWING SETUP: Is trend intact? Approaching demand zone?
-- INSIDER SIGNAL: Any notable insider buying or selling?
-- THESIS CHECK: Does today's data support or threaten a long position?
-
-4. ⚠️ DEMAND ZONE THREATS
-Stocks at risk of breaking below demand zones violently.
-Flag earnings surprises, macro shocks, heavy insider selling.
-Remove buy limit orders on these immediately.
-
-5. 📰 CATALYST CALENDAR — NEXT 7 DAYS
-Upcoming earnings with EPS estimates, Fed events, product launches.
-Know these before entering any swing position.
-
-6. 🧠 WEEKEND WATCHLIST PREP
-Top 3 stocks worth deep chart analysis this weekend.
-For each: why interesting, what price area to watch, insider context.
-
-════════════════════════════════════════
-PART 2 — SCALPER / DAY TRADER REPORT
-════════════════════════════════════════
-Trading style: enters and exits same day, wants volatility,
-wants to know which stocks are moving TODAY and why,
-looks for momentum, news catalysts, volume spikes, and pre-market movers.
-
-1. ⚡ TODAY'S TOP 5 VOLATILE STOCKS
-The 5 stocks most likely to make big intraday moves TODAY.
-For each: expected move size, what's driving it, direction bias, pre-market price if available.
-
-2. 🎯 SCALP SETUPS
-For each high volatility stock:
-- Direction bias: Long or Short
-- What to watch for as entry trigger
-- Key intraday levels to be aware of
-- Risk: what would invalidate this setup
-
-3. 📰 NEWS CATALYSTS TODAY
-Specific breaking news TODAY that could cause sudden spikes.
-Include exact times EST if known.
-
-4. 🔴 STOCKS TO AVOID TODAY
-Stocks dangerous for scalping — low volume, unpredictable news,
-earnings tonight (gap risk), wide spreads. Stay away.
-
-5. ⏰ KEY TIMES TODAY
-Important scheduled events with exact times EST —
-economic data, Fed speakers, earnings calls, option expiries.
-
-Be direct and actionable. Part 1 is for multi-day thinking.
-Part 2 is for today only — intraday, fast, ruthless.
-No fluff. No disclaimers.
-
+My trading style for this report:
+- Trader uses TQQQ only
+- Sells Cash Secured Puts (CSP) and Covered Calls (CC)
+- Needs to know: is the trend bullish or bearish this week?
+- Key support levels where selling puts would be safe
+- Key resistance levels where selling covered calls makes sense
+- Any macro events or volatility spikes that could blow through option positions
+- VIX direction — higher VIX = better premiums but more risk
+- Overall: is this a good week to be selling options or should he sit out?
 ---
 MARKET DATA:
 {all_data}
