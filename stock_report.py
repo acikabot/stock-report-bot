@@ -69,26 +69,6 @@ def fetch_finnhub_news(ticker: str) -> list:
         print(f"    Finnhub news failed for {ticker}: {e}")
         return []
 
-
-def fetch_finnhub_sentiment(ticker: str) -> str:
-    if not FINNHUB_API_KEY:
-        return ""
-    try:
-        url = f"https://finnhub.io/api/v1/news-sentiment?symbol={ticker}&token={FINNHUB_API_KEY}"
-        resp = requests.get(url, timeout=10)
-        resp.raise_for_status()
-        data = resp.json()
-        score = data.get("companyNewsScore", None)
-        buzz  = data.get("buzz", {}).get("buzz", None)
-        if score is not None:
-            sentiment = "Positive" if score > 0.6 else "Negative" if score < 0.4 else "Neutral"
-            return f"[Sentiment] Score: {score:.2f} ({sentiment}) | Buzz level: {buzz:.2f}" if buzz else f"[Sentiment] Score: {score:.2f} ({sentiment})"
-        return ""
-    except Exception as e:
-        print(f"    Finnhub sentiment failed for {ticker}: {e}")
-        return ""
-
-
 def fetch_finnhub_insider(ticker: str) -> list:
     if not FINNHUB_API_KEY:
         return []
@@ -141,14 +121,11 @@ def fetch_all_data(ticker: str) -> str:
 
     yahoo     = fetch_yahoo_news(ticker)
     finnhub   = fetch_finnhub_news(ticker)
-    sentiment = fetch_finnhub_sentiment(ticker)
     insider   = fetch_finnhub_insider(ticker)
     earnings  = fetch_finnhub_earnings(ticker)
 
     lines += yahoo
     lines += finnhub
-    if sentiment: lines.append(sentiment)
-    if premarket: lines.append(premarket)
     if earnings:  lines.append(earnings)
     lines += insider
 
