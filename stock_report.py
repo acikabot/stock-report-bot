@@ -231,6 +231,13 @@ No fluff. No disclaimers.
 ---
 MARKET DATA:
 {all_data}
+FORMAT RULES — follow these strictly:
+- Do NOT use ** for bold, do NOT use ## for headers
+- Use ALL CAPS for section headers instead
+- Use ► for bullet points
+- Use === as dividers between sections
+- Use PART 1 and PART 2 as clear separators
+- Use emoji as visual anchors at the start of each section
 """
 
     headers = {
