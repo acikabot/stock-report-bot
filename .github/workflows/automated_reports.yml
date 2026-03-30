@@ -2,8 +2,7 @@ name: 📈 Personalized Stock Reports
 
 on:
   schedule:
-    # 8:00 AM Skopje time (CEST = UTC+2) → 06:00 UTC
-    - cron: "0 6 * * 1-5"
+    - cron: "0 12 * * 1-5"
   workflow_dispatch:
 
 jobs:
