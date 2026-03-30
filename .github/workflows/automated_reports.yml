@@ -1,0 +1,33 @@
+name: 📈 Personalized Stock Reports
+
+on:
+  schedule:
+    # 8:00 AM Skopje time (CEST = UTC+2) → 06:00 UTC
+    - cron: "0 6 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  send-reports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 📦 Install dependencies
+        run: pip install requests google-auth google-auth-httplib2 google-api-python-client
+
+      - name: 📈 Run personalized reports
+        env:
+          GROQ_API_KEY:             ${{ secrets.GROQ_API_KEY }}
+          FINNHUB_API_KEY:          ${{ secrets.FINNHUB_API_KEY }}
+          EMAIL_SENDER:             ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD:           ${{ secrets.EMAIL_PASSWORD }}
+          GOOGLE_CREDENTIALS_JSON:  ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+          SPREADSHEET_ID:           ${{ secrets.SPREADSHEET_ID }}
+        run: python stock_report_automated.py
